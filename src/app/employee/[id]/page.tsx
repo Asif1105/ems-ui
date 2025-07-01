@@ -1,12 +1,22 @@
 import { notFound } from 'next/navigation';
-import { employees } from '../../data/employees';
+import Link from 'next/link';
+import { Employee } from "@/types/employee";
 
 interface EmployeeDetailsPageProps {
   params: { id: string };
 }
 
-export default function EmployeeDetailsPage({ params }: EmployeeDetailsPageProps) {
-  const employee = employees.find((e) => e.id === params.id);
+async function getEmployee(id: string): Promise<Employee | null> {
+  // Use absolute URL for SSR
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/employees/${id}`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+export default async function EmployeeDetailsPage({ params }: EmployeeDetailsPageProps) {
+  const employee = await getEmployee(params.id);
   if (!employee) return notFound();
 
   return (
@@ -24,6 +34,13 @@ export default function EmployeeDetailsPage({ params }: EmployeeDetailsPageProps
             ))}
           </ul>
         </div>
+        <Link
+          href="/"
+          className="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+          aria-label="Back to Home"
+        >
+          Home
+        </Link>
       </div>
     </div>
   );

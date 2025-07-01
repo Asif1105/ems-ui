@@ -1,4 +1,4 @@
-import { Employee } from '../types/employee';
+import { Employee } from "@/types/employee";
 
 export const employees: Employee[] = [
   {
@@ -15,5 +15,5 @@ export const employees: Employee[] = [
     sex: 'Male',
     employmentHistory: ['Engineer at Z', 'Manager at Q'],
   },
-  // Add more mock employees as needed
+  // Add more employees as needed
 ];
